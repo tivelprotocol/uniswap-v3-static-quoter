@@ -3,9 +3,9 @@ pragma solidity =0.7.6;
 pragma abicoder v2;
 
 import "@uniswap/v3-periphery/contracts/base/PeripheryImmutableState.sol";
-import "@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol";
 import "@uniswap/v3-periphery/contracts/libraries/Path.sol";
 
+import "./libraries/CustomizedPoolAddress.sol";
 import "./interfaces/IUniswapV3StaticQuoter.sol";
 import "./UniV3QuoterCore.sol";
 
@@ -17,21 +17,24 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
     using Path for bytes;
 
     address immutable factory;
+    bytes32 immutable initCodeHash;
 
-    constructor(address _factory) {
+    constructor(address _factory, bytes32 _initCodeHash) {
         factory = _factory;
+        initCodeHash = _initCodeHash;
     }
 
     function getPool(
         address tokenA,
         address tokenB,
         uint24 fee
-    ) private view returns (IUniswapV3Pool) {
+    ) private view returns (IUniswapV3likePool) {
         return
-            IUniswapV3Pool(
-                PoolAddress.computeAddress(
+            IUniswapV3likePool(
+                CustomizedPoolAddress.computeAddress(
                     factory,
-                    PoolAddress.getPoolKey(tokenA, tokenB, fee)
+                    initCodeHash,
+                    CustomizedPoolAddress.getPoolKey(tokenA, tokenB, fee)
                 )
             );
     }
@@ -40,7 +43,7 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
         QuoteExactInputSingleParams memory params
     ) public view override returns (uint256 amountOut) {
         bool zeroForOne = params.tokenIn < params.tokenOut;
-        IUniswapV3Pool pool = getPool(
+        IUniswapV3likePool pool = getPool(
             params.tokenIn,
             params.tokenOut,
             params.fee
@@ -94,7 +97,7 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
         QuoteExactOutputSingleParams memory params
     ) public view override returns (uint256 amountIn) {
         bool zeroForOne = params.tokenIn < params.tokenOut;
-        IUniswapV3Pool pool = getPool(
+        IUniswapV3likePool pool = getPool(
             params.tokenIn,
             params.tokenOut,
             params.fee
@@ -142,5 +145,59 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
                 return amountOut;
             }
         }
+    }
+
+    function getAmountOut(
+        address tokenIn,
+        address tokenOut,
+        address pool,
+        uint256 amountIn
+    ) public view returns (uint256 amountOut) {
+        IUniswapV3likePool v3pool = IUniswapV3likePool(pool);
+        (address token0, address token1) = tokenIn > tokenOut
+            ? (tokenIn, tokenOut)
+            : (tokenOut, tokenIn);
+
+        // wrong pool
+        if (v3pool.token0() != token0 || v3pool.token1() != token1) {
+            return 0;
+        }
+
+        amountOut = quoteExactInputSingle(
+            QuoteExactInputSingleParams({
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
+                amountIn: amountIn,
+                fee: v3pool.fee(),
+                sqrtPriceLimitX96: 0
+            })
+        );
+    }
+
+    function getAmountIn(
+        address tokenIn,
+        address tokenOut,
+        address pool,
+        uint256 amountOut
+    ) public view returns (uint256 amountIn) {
+        IUniswapV3likePool v3pool = IUniswapV3likePool(pool);
+        (address token0, address token1) = tokenIn > tokenOut
+            ? (tokenIn, tokenOut)
+            : (tokenOut, tokenIn);
+
+        // wrong pool
+        if (v3pool.token0() != token0 || v3pool.token1() != token1) {
+            return 0;
+        }
+
+        amountIn = quoteExactOutputSingle(
+            QuoteExactOutputSingleParams({
+                tokenIn: tokenIn,
+                tokenOut: tokenOut,
+                amount: amountOut,
+                fee: v3pool.fee(),
+                sqrtPriceLimitX96: 0
+            })
+        );
     }
 }

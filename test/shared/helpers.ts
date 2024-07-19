@@ -2,6 +2,16 @@ import { ethers, network, config } from "hardhat";
 import { FeeAmount } from "@uniswap/v3-sdk";
 import { Signer } from "ethers";
 
+export enum RamsesFeeAmount {
+    STABLE_PLUS = 50,
+    STABLE = 100,
+    BLUECHIP = 250,
+    BLUECHIP_PLUS = 500,
+    // _900 = 900,
+    MODERATELY_VOLATILE = 3000,
+    EXTREMELY_VOLATILE = 10000,
+}
+
 export const setHardhatNetwork = async (
     { forkBlockNumber, chainId, rpcUrl }:
         { forkBlockNumber: number, chainId: number, rpcUrl: string }
@@ -42,7 +52,7 @@ export async function deployContract(
         .then(f => f.connect(deployer).deploy(...(args || [])))
 }
 
-export function encodePath(path: string[], fees: FeeAmount[]): string {
+export function encodePath(path: string[], fees: (FeeAmount | RamsesFeeAmount)[]): string {
     const FEE_SIZE = 3;
 
     if (path.length != fees.length + 1) {

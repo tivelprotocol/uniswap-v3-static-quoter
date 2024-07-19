@@ -21,6 +21,8 @@ import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 
 interface UniswapV3StaticQuoterInterface extends ethers.utils.Interface {
   functions: {
+    "getAmountIn(address,address,address,uint256)": FunctionFragment;
+    "getAmountOut(address,address,address,uint256)": FunctionFragment;
     "quote(address,bool,int256,uint160)": FunctionFragment;
     "quoteExactInput(bytes,uint256)": FunctionFragment;
     "quoteExactInputSingle(tuple)": FunctionFragment;
@@ -28,6 +30,14 @@ interface UniswapV3StaticQuoterInterface extends ethers.utils.Interface {
     "quoteExactOutputSingle(tuple)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "getAmountIn",
+    values: [string, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAmountOut",
+    values: [string, string, string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "quote",
     values: [string, boolean, BigNumberish, BigNumberish]
@@ -65,6 +75,14 @@ interface UniswapV3StaticQuoterInterface extends ethers.utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "getAmountIn",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getAmountOut",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "quote", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "quoteExactInput",
@@ -100,6 +118,38 @@ export class UniswapV3StaticQuoter extends Contract {
   interface: UniswapV3StaticQuoterInterface;
 
   functions: {
+    getAmountIn(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amountIn: BigNumber }>;
+
+    "getAmountIn(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amountIn: BigNumber }>;
+
+    getAmountOut(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amountOut: BigNumber }>;
+
+    "getAmountOut(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amountOut: BigNumber }>;
+
     quote(
       poolAddress: string,
       zeroForOne: boolean,
@@ -188,6 +238,38 @@ export class UniswapV3StaticQuoter extends Contract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { amountIn: BigNumber }>;
   };
+
+  getAmountIn(
+    tokenIn: string,
+    tokenOut: string,
+    pool: string,
+    amountOut: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getAmountIn(address,address,address,uint256)"(
+    tokenIn: string,
+    tokenOut: string,
+    pool: string,
+    amountOut: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getAmountOut(
+    tokenIn: string,
+    tokenOut: string,
+    pool: string,
+    amountIn: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "getAmountOut(address,address,address,uint256)"(
+    tokenIn: string,
+    tokenOut: string,
+    pool: string,
+    amountIn: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   quote(
     poolAddress: string,
@@ -278,6 +360,38 @@ export class UniswapV3StaticQuoter extends Contract {
   ): Promise<BigNumber>;
 
   callStatic: {
+    getAmountIn(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getAmountIn(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getAmountOut(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getAmountOut(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     quote(
       poolAddress: string,
       zeroForOne: boolean,
@@ -370,6 +484,38 @@ export class UniswapV3StaticQuoter extends Contract {
   filters: {};
 
   estimateGas: {
+    getAmountIn(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getAmountIn(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getAmountOut(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "getAmountOut(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     quote(
       poolAddress: string,
       zeroForOne: boolean,
@@ -456,6 +602,38 @@ export class UniswapV3StaticQuoter extends Contract {
   };
 
   populateTransaction: {
+    getAmountIn(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getAmountIn(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountOut: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getAmountOut(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "getAmountOut(address,address,address,uint256)"(
+      tokenIn: string,
+      tokenOut: string,
+      pool: string,
+      amountIn: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     quote(
       poolAddress: string,
       zeroForOne: boolean,

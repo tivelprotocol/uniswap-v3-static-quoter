@@ -8,12 +8,14 @@
         "protocols": {
             "uniswapV3": {
                 "quoterV2": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
-                "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+                "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+                "initCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
             }
         }
     },
     "arbitrum": {
         "tokens": {
+            "weth": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", 
             "usdt": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", 
             "usdc": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
             "arb": "0x912CE59144191C1204E64559FE8253a0e49E6548"
@@ -21,7 +23,24 @@
         "protocols": {
             "uniswapV3": {
                 "quoterV2": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e", 
-                "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+                "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+                "initCodeHash": "0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54"
+            }
+        }
+    },
+    "scroll": {
+        "tokens": {
+            "usdt": "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df", 
+            "usdc": "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4",
+            "weth": "0x5300000000000000000000000000000000000004",
+            "wbtc": "0x3C1BCa5a656e69edCD0D4E36BEbb3FcDAcA60Cf1",
+            "nuri": "0xAAAE8378809bb8815c08D3C59Eb0c7D1529aD769"
+        },
+        "protocols": {
+            "nuri_exchange": {
+                "quoterV2": "0xAAAEA10b0e6FBe566FE27c3A023DC5D8cA6Bca3d", 
+                "factory": "0xAAA32926fcE6bE95ea2c51cB4Fcb60836D320C42",
+                "initCodeHash": "0x1565b129f2d1790f12d45301b9b084335626f0c92410bc43130763b69971135d"
             }
         }
     }

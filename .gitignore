@@ -3,3 +3,5 @@ node_modules
 scripts
 hardhat.config.ts
 cache
+typechain
+.DS_Store
